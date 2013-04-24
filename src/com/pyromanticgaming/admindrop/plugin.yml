@@ -1,0 +1,5 @@
+name: AdminDrop
+version: 0.0.1
+description: Stops users from dropping items if enabled.
+author: pyropyro78
+main: com.pyromanticgaming.admindrop.AdminDrop
