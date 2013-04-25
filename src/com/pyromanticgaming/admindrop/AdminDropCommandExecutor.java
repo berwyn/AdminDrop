@@ -107,9 +107,9 @@ TO BE ADDED			NoThrowCommand(sender);
 
 	private void StatusCommand(CommandSender sender) {
 		if(!dropless.contains(sender.getName())) {
-			sender.sendMessage(ChatColor.DARK_BLUE + "Your items are safe.");
+			sender.sendMessage(ChatColor.DARK_BLUE + "Your items not are safe.");
 		} else {
-			sender.sendMessage(ChatColor.DARK_BLUE + "Your items are not safe.");
+			sender.sendMessage(ChatColor.DARK_BLUE + "Your items are safe.");
 		}
 		
 	}
