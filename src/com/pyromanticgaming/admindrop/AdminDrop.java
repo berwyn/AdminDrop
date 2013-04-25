@@ -1,5 +1,6 @@
 package com.pyromanticgaming.admindrop;
 
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -14,20 +15,22 @@ public final class AdminDrop extends JavaPlugin implements Listener {
 	@Override
 	public void onEnable() {
 		getLogger().info("AdminDrop has been enabled.");
-		for(Player player: getServer().getOnlinePlayers()) {
-			if(player.hasPermission("AdminDrop.nd") || player.isOp()) {
-				player.sendMessage("AdminDrop has Reloaded.");
-			}
-		}
 		
 		getServer().getPluginManager().registerEvents(this, this);
 		
 		
-		getCommand("nd").setExecutor(new AdminDropCommandExecutor(this));
+		getCommand("ad").setExecutor(new AdminDropCommandExecutor(this));
 	}
 	
 	@Override
 	public void onDisable() {
+		for(Player player: getServer().getOnlinePlayers()) {
+			if(AdminDropCommandExecutor.dropless.contains(player)) {
+				player.sendMessage(ChatColor.DARK_BLUE + "Your items are not safe.");
+				player.sendMessage("AdminDrop is reloading.");
+				AdminDropCommandExecutor.dropless.remove(player.getName());
+			}
+		}
 		getLogger().info("AdminDrop has been disabled.");
 	}
 	
@@ -41,7 +44,6 @@ public final class AdminDrop extends JavaPlugin implements Listener {
 	public void onPlayerDeath(PlayerDeathEvent event) {
 	Entity e = event.getEntity();
 	Player p = (Player) e;
-	getLogger().info(p.getName() + " was here");
 	if((e instanceof Player) && AdminDropCommandExecutor.dropless.contains(p.getName())) {
 		event.getDrops().clear();
 	}
