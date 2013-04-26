@@ -31,9 +31,6 @@ public final class AdminDrop extends JavaPlugin implements Listener {
 				player.sendMessage("AdminDrop is reloading.");
 				AdminDropCommandExecutor.dropless.remove(player.getName());
 			}
-			if(AdminDropCommandExecutor.throwless.contains(player)){
-				player.sendMessage(ChatColor.DARK_BLUE + "Your items are throwable.");
-			}
 		}
 		getLogger().info("AdminDrop has been disabled.");
 	}
