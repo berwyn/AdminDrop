@@ -12,3 +12,4 @@ commands:
         /ad list - Lists users with Toggle on
         /ad status - Gets current status
         /ad status [player] - Gets players current status
+        /ad help - Displays commands

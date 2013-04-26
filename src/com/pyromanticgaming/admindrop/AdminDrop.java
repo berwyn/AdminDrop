@@ -25,12 +25,12 @@ public final class AdminDrop extends JavaPlugin implements Listener {
 	@Override
 	public void onDisable() {
 		for(Player player: getServer().getOnlinePlayers()) {
-			if(AdminDropCommandExecutor.dropless.contains(player)) {
+			if(AdminDropCommandExecutor.dropless.contains(player.getName())) {
 				player.sendMessage(ChatColor.DARK_BLUE + "Your items are not safe.");
 				player.sendMessage("AdminDrop is reloading.");
-				AdminDropCommandExecutor.dropless.remove(player.getName());
 			}
 		}
+		
 		getLogger().info("AdminDrop has been disabled.");
 	}
 	
@@ -45,6 +45,9 @@ public final class AdminDrop extends JavaPlugin implements Listener {
 	Entity e = event.getEntity();
 	Player p = (Player) e;
 	if((e instanceof Player) && AdminDropCommandExecutor.dropless.contains(p.getName())) {
+		event.getDrops().clear();
+	} else
+	if((e instanceof Player) && p.hasPermission("AdminDrop.dd")) {
 		event.getDrops().clear();
 	}
 	}

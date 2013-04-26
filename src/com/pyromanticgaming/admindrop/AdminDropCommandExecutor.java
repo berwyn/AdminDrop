@@ -18,6 +18,7 @@ public class AdminDropCommandExecutor implements CommandExecutor {
 	
 	public static Set<String> dropless = new HashSet<String>();
 	public static Set<String> playerList = new HashSet<String>();
+	public static Set<String> protectPlayerList = new HashSet<String>();
 	
 	public AdminDropCommandExecutor(AdminDrop admindrop) {
 		
@@ -62,16 +63,26 @@ TO BE ADDED			NoThrowCommand(sender);
 					StatusOtherCommand(otherPlayer, sender);
 					return true;
 				} else
+				if((args.length == 2) && args[0].equalsIgnoreCase("status") && (!playerList.isEmpty() && !playerList.contains(args[1])) && (sender.hasPermission("AdminDrop.so") || sender.isOp())) {
+					sender.sendMessage(ChatColor.DARK_BLUE + args[1] + " is either not logged in or name was typed incorrectly.");
+					return true;
+				}
+				else
 				if((args.length > 2)) {
 					sender.sendMessage("AdminDrop - Too many arguments!");
 					InfoArea(sender);
 					return true;
 				} else
-				if((args.length == 1 || args.length == 2) && (sender.hasPermission("AdminDrop.*") || sender.isOp())){
+				if((args.length == 1) && args[0].equalsIgnoreCase("help") && (sender.hasPermission("AdminDrop.*") || sender.isOp())) {
+					sender.sendMessage("AdminDrop Help Information.");
+					InfoArea(sender);
+					return true;
+				} else
+				if((args.length == 1 || args.length == 2) && (sender.hasPermission("AdminDrop.*") || sender.isOp())) {
 					sender.sendMessage("AdminDrop - Not a valid argument!");
 					InfoArea(sender);
 					return true;
-				} else {
+				}else {
 					sender.sendMessage("AdminDrop - You do not have permission for that.");
 					return true;
 				}
@@ -84,7 +95,7 @@ TO BE ADDED			NoThrowCommand(sender);
 	}
 	
 	private void StatusOtherCommand(Player otherPlayer, CommandSender sender) { //Checks status of target player
-		if(!dropless.contains(otherPlayer.getName())) {
+		if(!dropless.contains(otherPlayer.getName()) && !otherPlayer.hasPermission("AdminDrop.dd")) {
 			sender.sendMessage(ChatColor.DARK_BLUE + otherPlayer.getDisplayName() + ChatColor.DARK_BLUE + "'s items not are safe.");
 		} else {
 			sender.sendMessage(ChatColor.DARK_BLUE + otherPlayer.getDisplayName() + ChatColor.DARK_BLUE + "'s items are safe.");
@@ -98,6 +109,7 @@ TO BE ADDED			NoThrowCommand(sender);
 		sender.sendMessage("/ad list - Lists users with Toggle on");
 //		sender.sendMessage("/ad nt - Toggles throwing items");
 		sender.sendMessage("/ad status - Gets current status");
+		sender.sendMessage("/ad help - Displays commands");
 		sender.sendMessage("/ad status [player] - Gets players current status");
 	}
 	
@@ -111,9 +123,17 @@ TO BE ADDED			NoThrowCommand(sender);
 	}
 
 	private void ListCommand(CommandSender sender) {
+		for(Player onlineplayer: admindrop.getServer().getOnlinePlayers()) {
+			if(onlineplayer.hasPermission("AdminDrop.dd")) {
+				protectPlayerList.add(onlineplayer.getName());
+				dropless.addAll(protectPlayerList);
+			}
+		}
 		if(!dropless.isEmpty()) { //If the hashmap dropless is not empty it will display the players on the list
 			String listdropless = dropless.toString(); //hashmaps and Strings do not mix without this
 			sender.sendMessage(ChatColor.DARK_BLUE + listdropless);
+			dropless.removeAll(protectPlayerList);
+			protectPlayerList.clear();
 		} else
 		if(dropless.isEmpty()){
 			sender.sendMessage(ChatColor.DARK_BLUE + "List is empty");
