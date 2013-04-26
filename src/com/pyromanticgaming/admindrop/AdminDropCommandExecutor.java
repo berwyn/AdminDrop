@@ -154,7 +154,6 @@ public class AdminDropCommandExecutor implements CommandExecutor {
 	}
 
 	private void NoThrowCommand(CommandSender sender) {
-		// TODO Auto-generated method stub
 	Player player = (Player) sender;
 	if(!throwless.contains(player.getName())) {
 		DisableThrows(player);
