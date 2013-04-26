@@ -10,6 +10,7 @@ commands:
         /ad - Toggles on/off
         /ad [player] - Toggles other on/off
         /ad list - Lists users with Toggle on
+        /ad ta - Toggles the ability to throw away items on/pff
         /ad status - Gets current status
         /ad status [player] - Gets players current status
         /ad help - Displays commands

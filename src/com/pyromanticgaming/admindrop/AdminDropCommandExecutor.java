@@ -17,6 +17,7 @@ public class AdminDropCommandExecutor implements CommandExecutor {
 	private AdminDrop admindrop;
 	
 	public static Set<String> dropless = new HashSet<String>();
+	public static Set<String> throwless = new HashSet<String>();
 	public static Set<String> playerList = new HashSet<String>();
 	public static Set<String> protectPlayerList = new HashSet<String>();
 	
@@ -31,7 +32,7 @@ public class AdminDropCommandExecutor implements CommandExecutor {
 		if(cmd.getName().equalsIgnoreCase("ad")) {
 			if(sender instanceof Player) {
 				Player otherPlayer = null; //Declared here to allow use later in the nested if statements
-				if((args.length > 0) && !args[0].equalsIgnoreCase("list") && !args[0].equalsIgnoreCase("nt")) {
+				if((args.length > 0) && !args[0].equalsIgnoreCase("list") && !args[0].equalsIgnoreCase("ta")) {
 					playerList.clear(); //To ensure that it is the most up to date list of online players
 					for(Player player1: admindrop.getServer().getOnlinePlayers()) {
 						playerList.add(player1.getName()); //Adds everyone online to the playerList hashmap
@@ -49,11 +50,11 @@ public class AdminDropCommandExecutor implements CommandExecutor {
 					otherPlayer = Bukkit.getPlayer(args[0]); //Snags the target players identifier, NOT NAME, important to note that
 					ModifyOtherCommand(otherPlayer, sender);
 					return true;
-				}/* else
-				if((args.length == 1) && args[0].equalsIgnoreCase("nt") && (sender.hasPermission("AdminDrop.nt") || sender.isOp())) {
-TO BE ADDED			NoThrowCommand(sender);
+				} else
+				if((args.length == 1) && args[0].equalsIgnoreCase("ta") && (sender.hasPermission("AdminDrop.ta") || sender.isOp())) {
+					NoThrowCommand(sender);
 					return true;
-				}*/ else
+				} else
 				if((args.length == 1) && args[0].equalsIgnoreCase("status") && (sender.hasPermission("AdminDrop.s") || sender.isOp())) {
 					StatusCommand(sender);
 					return true;
@@ -107,7 +108,7 @@ TO BE ADDED			NoThrowCommand(sender);
 		sender.sendMessage("/ad - Toggles on/off");
 		sender.sendMessage("/ad [player] - Toggles other on/off");
 		sender.sendMessage("/ad list - Lists users with Toggle on");
-//		sender.sendMessage("/ad nt - Toggles throwing items");
+		sender.sendMessage("/ad ta - Toggles throwing items");
 		sender.sendMessage("/ad status - Gets current status");
 		sender.sendMessage("/ad help - Displays commands");
 		sender.sendMessage("/ad status [player] - Gets players current status");
@@ -152,10 +153,27 @@ TO BE ADDED			NoThrowCommand(sender);
 		
 	}
 
-/*	private void NoThrowCommand(CommandSender sender) {
+	private void NoThrowCommand(CommandSender sender) {
 		// TODO Auto-generated method stub
-TO BE ADDED		
-	}*/
+	Player player = (Player) sender;
+	if(!throwless.contains(player.getName())) {
+		DisableThrows(player);
+	}
+	else {
+		EnableThrows(player);
+	}
+
+	}
+	
+	private void DisableThrows(Player player) {
+		player.sendMessage("Throwing away your items has been disabled.");
+		throwless.add(player.getName());
+	}
+	
+	private void EnableThrows(Player player) {
+		player.sendMessage("Throwing away your items has been enabled.");
+		throwless.remove(player.getName());
+	}
 
 	private void DropCommand(CommandSender sender) {
 		Player player = (Player) sender; //Reason for the conversion here is to use Player in a later function instead of CommandSender
