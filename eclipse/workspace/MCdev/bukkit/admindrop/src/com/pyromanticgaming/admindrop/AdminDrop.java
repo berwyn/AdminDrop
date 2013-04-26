@@ -7,6 +7,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -30,6 +31,9 @@ public final class AdminDrop extends JavaPlugin implements Listener {
 				player.sendMessage("AdminDrop is reloading.");
 				AdminDropCommandExecutor.dropless.remove(player.getName());
 			}
+			if(AdminDropCommandExecutor.throwless.contains(player)){
+				player.sendMessage(ChatColor.DARK_BLUE + "Your items are throwable.");
+			}
 		}
 		getLogger().info("AdminDrop has been disabled.");
 	}
@@ -48,6 +52,12 @@ public final class AdminDrop extends JavaPlugin implements Listener {
 		event.getDrops().clear();
 	}
 	}
+	@EventHandler
+	public void onPlayerDropItem(PlayerDropItemEvent event) {
+	Player p = event.getPlayer();
+	if ((p instanceof Player) && AdminDropCommandExecutor.throwless.contains(p.getName())) {
+		event.setCancelled(true);
+	}
 
-	
+	}
 }
