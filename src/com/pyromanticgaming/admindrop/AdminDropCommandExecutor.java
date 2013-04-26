@@ -30,11 +30,11 @@ public class AdminDropCommandExecutor implements CommandExecutor {
 			String[] args) {
 		if(cmd.getName().equalsIgnoreCase("ad")) {
 			if(sender instanceof Player) {
-				Player otherPlayer = null;
-				if((args.length > 0) && !args[0].equalsIgnoreCase("list") && !args[0].equalsIgnoreCase("nt")) {
-					playerList.clear();
+				Player otherPlayer = null; //Declared here to allow use later in the nested if statements
+				if((args.length > 0) && !args[0].equalsIgnoreCase("list") && !args[0].equalsIgnoreCase("ta")) {
+					playerList.clear(); //To ensure that it is the most up to date list of online players
 					for(Player player1: admindrop.getServer().getOnlinePlayers()) {
-						playerList.add(player1.getName());
+						playerList.add(player1.getName()); //Adds everyone online to the playerList hashmap
 					}
 				}
 				if((args.length == 0) && (sender.hasPermission("AdminDrop.ad") || sender.isOp())) {
@@ -46,11 +46,11 @@ public class AdminDropCommandExecutor implements CommandExecutor {
 					return true;
 				} else
 				if((args.length == 1) && (!playerList.isEmpty() && playerList.contains(args[0])) && (sender.hasPermission("AdminDrop.mo") || sender.isOp())) {
-					otherPlayer = Bukkit.getPlayer(args[0]);
+					otherPlayer = Bukkit.getPlayer(args[0]); //Snags the target players identifier, NOT NAME, important to note that
 					ModifyOtherCommand(otherPlayer, sender);
 					return true;
 				} else
-				if((args.length == 1) && args[0].equalsIgnoreCase("nt") && (sender.hasPermission("AdminDrop.nt") || sender.isOp())) {
+				if((args.length == 1) && args[0].equalsIgnoreCase("ta") && (sender.hasPermission("AdminDrop.ta") || sender.isOp())) {
 					NoThrowCommand(sender);
 					return true;
 				} else
@@ -65,25 +65,12 @@ public class AdminDropCommandExecutor implements CommandExecutor {
 				} else
 				if((args.length > 2)) {
 					sender.sendMessage("AdminDrop - Too many arguments!");
-					
-					sender.sendMessage("AdminDrop - Not a valid argument!");
-					sender.sendMessage("/ad - Toggles on/off");
-					sender.sendMessage("/ad [player] - Toggles other on/off");
-					sender.sendMessage("/ad list - Lists users with Toggle on");
-					sender.sendMessage("/ad nt - Toggles throwing items");
-					sender.sendMessage("/ad status - Gets current status");
-					sender.sendMessage("/ad status [player] - Gets players current status");
+					InfoArea(sender);
 					return true;
 				} else
 				if((args.length == 1 || args.length == 2) && (sender.hasPermission("AdminDrop.*") || sender.isOp())){
 					sender.sendMessage("AdminDrop - Not a valid argument!");
-					
-					sender.sendMessage("/ad - Toggles on/off");
-					sender.sendMessage("/ad [player] - Toggles other on/off");
-					sender.sendMessage("/ad list - Lists users with Toggle on");
-					sender.sendMessage("/ad nt - Toggles throwing items");
-					sender.sendMessage("/ad status - Gets current status");
-					sender.sendMessage("/ad status [player] - Gets players current status");
+					InfoArea(sender);
 					return true;
 				} else {
 					sender.sendMessage("AdminDrop - You do not have permission for that.");
@@ -97,7 +84,7 @@ public class AdminDropCommandExecutor implements CommandExecutor {
 		return false;
 	}
 	
-	private void StatusOtherCommand(Player otherPlayer, CommandSender sender) {
+	private void StatusOtherCommand(Player otherPlayer, CommandSender sender) { //Checks status of target player
 		if(!dropless.contains(otherPlayer.getName())) {
 			sender.sendMessage(ChatColor.DARK_BLUE + otherPlayer.getDisplayName() + ChatColor.DARK_BLUE + "'s items not are safe.");
 		} else {
@@ -106,7 +93,16 @@ public class AdminDropCommandExecutor implements CommandExecutor {
 		
 	}
 
-	private void StatusCommand(CommandSender sender) {
+	private void InfoArea(CommandSender sender) { //Stores the informational data on command syntax to send to the user
+		sender.sendMessage("/ad - Toggles on/off");
+		sender.sendMessage("/ad [player] - Toggles other on/off");
+		sender.sendMessage("/ad list - Lists users with Toggle on");
+		sender.sendMessage("/ad ta - Toggles throwing items");
+		sender.sendMessage("/ad status - Gets current status");
+		sender.sendMessage("/ad status [player] - Gets players current status");
+	}
+	
+	private void StatusCommand(CommandSender sender) { //Checks status of the player sending the command
 		if(!dropless.contains(sender.getName())) {
 			sender.sendMessage(ChatColor.DARK_BLUE + "Your items not are safe.");
 		} else {
@@ -116,8 +112,8 @@ public class AdminDropCommandExecutor implements CommandExecutor {
 	}
 
 	private void ListCommand(CommandSender sender) {
-		if(!dropless.isEmpty()) {
-			String listdropless = dropless.toString();
+		if(!dropless.isEmpty()) { //If the hashmap dropless is not empty it will display the players on the list
+			String listdropless = dropless.toString(); //hashmaps and Strings do not mix without this
 			sender.sendMessage(ChatColor.DARK_BLUE + listdropless);
 		} else
 		if(dropless.isEmpty()){
@@ -126,7 +122,7 @@ public class AdminDropCommandExecutor implements CommandExecutor {
 		
 	}
 
-	private void ModifyOtherCommand(Player otherPlayer, CommandSender sender) {
+	private void ModifyOtherCommand(Player otherPlayer, CommandSender sender) { //Function to check targets name and send it to be toggled
 		if(!dropless.contains(otherPlayer.getName())) {
 			DisableDrops(otherPlayer);
 			sender.sendMessage(ChatColor.DARK_BLUE + otherPlayer.getDisplayName() + ChatColor.DARK_BLUE + "'s items are safe.");
@@ -138,41 +134,42 @@ public class AdminDropCommandExecutor implements CommandExecutor {
 	}
 
 	private void NoThrowCommand(CommandSender sender) {
-		Player player = (Player) sender;
-		if(!throwless.contains(player.getName())){
-			DisableThrow(player);
-			
-		} 
-		else {
-			EnableThrow(player);
-		}
+		// TODO Auto-generated method stub
+	Player player = (Player) sender;
+	if(!throwless.contains(player.getName())) {
+		DisableThrows(player);
+	}
+	else {
+		EnableThrows(player);
+	}
+
 	}
 	
-	private void DisableThrow(Player player) {
-		player.sendMessage(ChatColor.DARK_BLUE + "Your items cannot be dropped.");
+	private void DisableThrows(Player player) {
+		player.sendMessage("Throwing away your items has been disabled.");
 		throwless.add(player.getName());
 	}
 	
-	private void EnableThrow(Player player) {
-		player.sendMessage(ChatColor.DARK_BLUE + "Your items can now be dropped.");
+	private void EnableThrows(Player player) {
+		player.sendMessage("Throwing away your items has been enabled.");
 		throwless.remove(player.getName());
 	}
 
 	private void DropCommand(CommandSender sender) {
-		Player player = (Player) sender;
-		if(!dropless.contains(player.getName())) {
+		Player player = (Player) sender; //Reason for the conversion here is to use Player in a later function instead of CommandSender
+		if(!dropless.contains(player.getName())) { //If the players name is not in the hashmap it will stop drops on death
 			DisableDrops(player);
-		} else {
+		} else { // Otherwise it will run this function to allow drops to take place again on death
 			EnableDrops(player);
 		}
 	}
 	
-	private void DisableDrops(Player player) {
+	private void DisableDrops(Player player) { //Stops drops on death by adding the players name to a hashmap
 		player.sendMessage(ChatColor.DARK_BLUE + "Your items are safe.");
 		dropless.add(player.getName());
 	}
 	
-	private void EnableDrops(Player player) {
+	private void EnableDrops(Player player) { // Enables drops on death by removing the players name from the hashmap
 		player.sendMessage(ChatColor.DARK_BLUE + "Your items are not safe.");
 		dropless.remove(player.getName());
 	}

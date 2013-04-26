@@ -49,12 +49,16 @@ public final class AdminDrop extends JavaPlugin implements Listener {
 		event.getDrops().clear();
 	}
 	}
-	@EventHandler
-	public void onPlayerDropItem(PlayerDropItemEvent event) {
+	
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onPlayerDropItemEvent(PlayerDropItemEvent event){
 	Player p = event.getPlayer();
 	if ((p instanceof Player) && AdminDropCommandExecutor.throwless.contains(p.getName())) {
 		event.setCancelled(true);
+		p.sendMessage("Throwing away your items has been disabled.");
+	}
+	
 	}
 
-	}
+	
 }
