@@ -13,12 +13,17 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public final class AdminDrop extends JavaPlugin implements Listener {
 
+	public static int DDLogLevel;
+	
 	@Override
 	public void onEnable() {
 		getLogger().info("AdminDrop has been enabled.");
 		
 		getServer().getPluginManager().registerEvents(this, this);
 		
+	    this.saveDefaultConfig();
+	    DDLogLevel = this.getConfig().getInt("DDLogLevel");
+	    
 		
 		getCommand("ad").setExecutor(new AdminDropCommandExecutor(this));
 	}
@@ -47,6 +52,9 @@ public final class AdminDrop extends JavaPlugin implements Listener {
 	Player p = (Player) e;
 	if((e instanceof Player) && AdminDropCommandExecutor.dropless.contains(p.getName())) {
 		event.getDrops().clear();
+		if(DDLogLevel == 1 || DDLogLevel == 2 || DDLogLevel == 3); {
+			getLogger().info(p.getName() + " Has died with Death Drops enabled!");
+		}
 	} else
 	if((e instanceof Player) && p.hasPermission("AdminDrop.dd")) {
 		event.getDrops().clear();

@@ -146,9 +146,15 @@ public class AdminDropCommandExecutor implements CommandExecutor {
 		if(!dropless.contains(otherPlayer.getName())) {
 			DisableDrops(otherPlayer);
 			sender.sendMessage(ChatColor.DARK_BLUE + otherPlayer.getDisplayName() + ChatColor.DARK_BLUE + "'s items are safe.");
+			if(AdminDrop.DDLogLevel == 3); {
+				admindrop.getLogger().info(sender.getName() + " Has enabled Death Drops for " + otherPlayer.getName() + "!");
+			}
 		} else {
 			EnableDrops(otherPlayer);
 			sender.sendMessage(ChatColor.DARK_BLUE + otherPlayer.getDisplayName() + ChatColor.DARK_BLUE + "'s items are not safe.");
+			if(AdminDrop.DDLogLevel == 3); {
+				admindrop.getLogger().info(sender.getName() + " Has disabled Death Drops for " + otherPlayer.getName() + "!");
+			}
 		}
 		
 	}
@@ -178,14 +184,21 @@ public class AdminDropCommandExecutor implements CommandExecutor {
 		Player player = (Player) sender; //Reason for the conversion here is to use Player in a later function instead of CommandSender
 		if(!dropless.contains(player.getName())) { //If the players name is not in the hashmap it will stop drops on death
 			DisableDrops(player);
+			if(AdminDrop.DDLogLevel == 2 || AdminDrop.DDLogLevel == 3); {
+				admindrop.getLogger().info(player.getName() + " Has enabled Death Drops!");
+			}
 		} else { // Otherwise it will run this function to allow drops to take place again on death
 			EnableDrops(player);
+			if(AdminDrop.DDLogLevel == 2 || AdminDrop.DDLogLevel == 3); {
+				admindrop.getLogger().info(player.getName() + " Has disabled Death Drops!");
+			}
 		}
 	}
 	
 	private void DisableDrops(Player player) { //Stops drops on death by adding the players name to a hashmap
 		player.sendMessage(ChatColor.DARK_BLUE + "Your items are safe.");
 		dropless.add(player.getName());
+		
 	}
 	
 	private void EnableDrops(Player player) { // Enables drops on death by removing the players name from the hashmap

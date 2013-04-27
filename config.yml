@@ -1,0 +1,29 @@
+#########################################
+#########################################
+#########################################
+#########################################
+####            AdminDrop            ####
+####                                 ####
+####               By:               ####
+####                                 ####
+####   Pyropyro78 & NitroNumberOne   ####
+####                                 ####
+####   "Human knowledge belongs to   ####
+####           the world."           ####
+####        ~Antitrust(2001)         ####
+#### (www.imdb.com/title/tt0218817/) ####
+#########################################
+#########################################
+#########################################
+#########################################
+
+#This sets the log level to the console for Death Drops.
+#Default is 0.
+#0 = None other than enabling and disabling.
+#1 = Logs when a user dies with Death Drop enabled
+# Excluding the users with AdminDrop.dd
+#2 = Will also log when a user uses /ad on self
+# Will show enable and disable
+#3 = Will also log when a user uses /ad successfully on another
+# Will show enable and disable
+DDLogLevel: 0
